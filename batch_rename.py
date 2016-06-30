@@ -27,11 +27,14 @@ def main(args):
 
 	print "Matchings:",len(files)
 
-	for i in files:
-		print "Renaming:",i
-		before = str(path+"\\"+i).strip()
-		after = str(path+"\\"+str(i).replace(phrase,repPhrase)).strip()
-		os.rename(before,after)
+	if len(files) != 0:
+		for i in files:
+			print "Renaming:",i
+			before = str(path+"\\"+i).strip()
+			after = str(path+"\\"+str(i).replace(phrase,repPhrase)).strip()
+			os.rename(before,after)
+	else:
+		print "Error - No files to rename"
 
 if __name__ == '__main__':
 	main(sys.argv[1:])
