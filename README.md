@@ -1,2 +1,2 @@
 # littleThings
-Small scripts to make things a little easier
+Small scripts (that I made) to make things a little easier
