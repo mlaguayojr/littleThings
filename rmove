@@ -1,0 +1,52 @@
+"""
+ Mario Luis Aguayo Jr.
+ mlaguayojr@gmail.com
+
+ rmove will recursively move all files from source that have the provided file extensions
+ to the destination
+
+ program [source path] [dest path] [.fileext1+.fileext2]
+"""
+
+import os
+import sys
+import shutil
+
+def main(args):
+	src = args[0]
+	dest = args[1]
+	files = args[2]
+
+	if check(src):
+		if check(dest):
+			files = files.split("+")
+			scan = list()
+			scan.append(src)
+			scan.extend(getSubFolders(src, dest))
+			copy(dest, scan, files)
+
+def copy(dest, d, f):
+	for i in d:
+		for a in os.listdir(i):
+			if os.path.splitext(a)[1] in f:
+				print "[ moving "+i+a+" ]"
+				shutil.move(i+a,dest)
+
+def getSubFolders(src, dest):
+	print "[ Scanning ]"
+	folders = list()
+	for i in os.listdir(src):
+		if not os.path.isfile(src+i) and str(src+i+"\\") != str(dest):
+			folders.append(src+i+"\\")
+
+	return folders
+
+def check(path):
+	if os.path.exists(path):
+		return True
+	else:
+		print "\'"+path+"\' does not exist!"
+		return False
+
+if __name__ == '__main__':
+	main(sys.argv[1:])
