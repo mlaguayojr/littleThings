@@ -1,0 +1,70 @@
+"""
+ Mario Luis Aguayo Jr.
+ mlaguayojr@gmail.com
+
+ compdir will recursively select files
+ and compare each files between the two directories.
+ duplicates are stored in the output file
+
+ program [dir1] [dir2] [outfile]
+"""
+
+
+import filecmp
+import os
+import sys
+
+global files1
+files1 = list()
+
+global files2
+files2 = list()
+
+def main(dir1,dir2,outputfile):
+	global files1
+	print "[ Recursively Scanning "+dir1+" ]"
+	listFiles(dir1, files1)
+	print "[ Sorting ]"
+	files1 = sorted(files1)
+
+	global files2
+	print "[ Recursively Scanning "+dir1+" ]"
+	listFiles(dir2, files2)
+	print "[ Sorting ]"
+	files2 = sorted(files2)
+
+	if os.path.exists(outputfile):
+		print "[ Deleting Previous Output File ]"
+		os.remove(outputfile)
+
+	dups = list()
+	print "[ Comparing Files ]"
+	for i in files1:
+		for j in files2:
+			if i != j:
+				if filecmp.cmp(i,j):
+					if str(i+"\t"+j) not in dups:
+						if str(j+"\t"+i) not in dups:
+							dups.append(i+"\t"+j)
+
+	print "[ "+str(len(dups))+" Duplicates Found ]"
+
+	dups = sorted(list(set(dups)))
+
+	with open(outputfile,'w') as f:
+		f.write("The following files were deemed duplicates:\n")
+		for i in dups:
+			f.write(i+"\n")
+
+	# files2 = getFiles(dir2)
+
+def listFiles(d, l):
+	for i in os.listdir(str(d)):
+		f = str(d+"\\"+i)
+		if os.path.isfile(f):
+			l.append(f)
+		elif os.path.isdir(f):
+			listFiles(str(f),l)
+
+if __name__ == '__main__':
+	main(sys.argv[1:])
